@@ -1,0 +1,477 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class node
+{
+	public:
+	int key;
+	node *left, *right;
+};
+
+node* newNode(int key)
+{
+	node* Node = new node();
+	Node->key = key;
+	Node->left = Node->right = NULL;
+	return (Node);
+}
+
+node *rightRotate(node *x)
+{
+	node *y = x->left;
+	x->left = y->right;
+	y->right = x;
+	return y;
+}
+
+node *leftRotate(node *x)
+{
+	node *y = x->right;
+	x->right = y->left;
+	y->left = x;
+	return y;
+}
+
+node *splay(node *root, int key)
+{
+	if (root == NULL || root->key == key)
+		return root;
+	if (root->key > key)
+	{
+		if (root->left == NULL) return root;
+		if (root->left->key > key)
+		{
+			root->left->left = splay(root->left->left, key);
+			root = rightRotate(root);
+		}
+		else if (root->left->key < key)
+		{
+			root->left->right = splay(root->left->right, key);
+			if (root->left->right != NULL)
+				root->left = leftRotate(root->left);
+		}
+		return (root->left == NULL)? root: rightRotate(root);
+	}
+	else
+	{
+		if (root->right == NULL) return root;
+		if (root->right->key > key)
+		{
+			root->right->left = splay(root->right->left, key);
+			if (root->right->left != NULL)
+				root->right = rightRotate(root->right);
+		}
+		else if (root->right->key < key)
+		{
+			root->right->right = splay(root->right->right, key);
+			root = leftRotate(root);
+		}
+		return (root->right == NULL)? root: leftRotate(root);
+	}
+}
+
+node *insert(node *root, int k)
+{
+	if (root == NULL) return newNode(k);
+        root = splay(root, k);
+	if (root->key == k) return root;
+		node *newnode = newNode(k);
+	if (root->key > k)
+	{
+		newnode->right = root;
+		newnode->left = root->left;
+		root->left = NULL;
+	}
+	else
+	{
+		newnode->left = root;
+		newnode->right = root->right;
+		root->right = NULL;
+	}
+
+	return newnode;
+}
+
+
+node* delete_key(node *root, int key)
+{
+    node *temp;
+    if (!root)
+        return NULL;
+    root = splay(root, key);
+    if (key != root->key)
+        return root;
+    if (!root->left)
+    {
+        temp = root;
+        root = root->right;
+    }
+    else
+    {
+        temp = root;
+        root = splay(root->left, key);
+        root->right = temp->right;
+    }
+    free(temp);
+    return root;
+
+}
+
+void preOrder(node *root)
+{
+	if (root != NULL)
+	{
+		cout<<root->key<<" ";
+		preOrder(root->left);
+		preOrder(root->right);
+	}
+}
+
+void inOrder(node *root)
+{
+	if (root != NULL)
+	{
+		preOrder(root->left);
+		cout<<root->key<<" ";
+		preOrder(root->right);
+	}
+}
+
+void postOrder(node *root)
+{
+	if (root != NULL)
+	{
+		preOrder(root->left);
+		preOrder(root->right);
+		cout<<root->key<<" ";
+	}
+}
+
+void clearq(queue <node*> Q)
+ {
+    while (!Q.empty())
+    {
+        Q.pop();
+    }
+}
+
+void levelOrder(node *root)
+{
+	node *temp;
+	queue <node*> Q;
+        if(root == NULL)
+        {
+                cout << "No elements in the tree";
+        }
+        else
+        {
+                Q.push(root);
+                while (!Q.empty())
+                {
+                        temp = Q.front();
+                        Q.pop();
+                        cout << temp->key << " ";
+                        if(temp->left != NULL)
+                        {
+                                Q.push(temp->left);
+                        }
+                        if(temp->right != NULL)
+                        {
+                        Q.push(temp->right);
+                        }
+                }
+                clearq(Q);
+        }
+}
+
+node* search(node *root,int element)
+{
+	while(root!=NULL && element!=root->key)
+	{
+		if(element<root->key)
+			root=root->left;
+		else
+			root=root->right;
+	}
+	return root;
+}
+
+int search2(node *root,int element)
+{
+	int count=0;
+        while(root!=NULL && element!=root->key)
+        {
+            count++;
+            if(element<root->key)
+                root=root->left;
+            else
+                root=root->right;
+        }
+        if(root==NULL)
+		return -1;
+	else
+		return count;
+}
+
+node* minValueNode(node* root)
+{
+    node* current = root;
+    while (current->left != NULL)
+        current = current->left;
+
+    return current;
+}
+
+node* maxValueNode(node* root)
+{
+    node* current = root;
+    while (current->left != NULL)
+        current = current->left;
+
+    return current;
+}
+
+node* successor(node *root,node *temp)
+{
+	if(temp->right != NULL)
+		return minValueNode(temp->right);
+	node *succ;
+	while(root->key != temp->key)
+	{
+		if(root->key < temp->key)
+		{
+			root = root->right;
+		}
+		else if(root->key > temp->key)
+		{
+			succ = root;
+                root = root->left;
+		}
+	}
+	return succ;
+}
+
+node* predecessor(node *root,node *temp)
+{
+	if(temp->left != NULL)
+		return minValueNode(temp->left);
+	node *pred;
+	while(root->key != temp->key && root != NULL)
+	{
+		if(root->key < temp->key)
+		{
+			root=root->right;
+		}
+		else if(root->key > temp->key)
+		{
+			pred=root;
+			root=root->left;
+		}
+	}
+	return pred;
+}
+
+void menu(node* root)
+{
+    node *max,*min,*temp,*temp2;
+    int ch,n,a,d,count;
+    char c;
+    cout<<"\n Do you want to continue[y/n]: ";
+    cin>>c;
+    if(c=='y')
+        system("CLS");
+    else
+        exit(0);
+    cout<<"\n MENU: \n\t1.Insert\n\t2.Delete\n\t3.Display\n Your choice: ";
+    cin>>ch;
+    switch(ch)
+    {
+        case 1:
+            cout<<"\n Enter the number of nodes to be inserted: ";
+            cin>>n;
+            for(int i=0;i<n;i++)
+            {
+                cout<<"\n Enter the element "<<i+1<<" : ";
+                cin>>a;
+                root=insert(root,a);
+            }
+            break;
+        case 2:
+            cout<<"\n Enter the element to be deleted: ";
+            cin>>a;
+            root = delete_key(root, a);
+            break;
+        case 3:
+            system("CLS");
+            cout<<"\n Display menu:\n\t1.Pre order traversal\n\t2.In order traversal\n\t3.Post order traversal\n\t4.Level order traversal";
+            cout<<"\n\t5.Level of an element\n\t6.Minimum element\n\t7.Maximum element\n\t8.Successor of an element";
+            cout<<"\n\t9.Predecessor of an element\nYour choice: ";
+            cin>>d;
+            switch(d)
+            {
+                case 1:
+                    cout<<"\n Pre order traversal of the tree: ";
+                    preOrder(root);
+                    break;
+                case 2:
+                    cout<<"\n In order traversal of the tree: ";
+                    inOrder(root);
+                    break;
+                case 3:
+                    cout<<"\n Post order traversal of the tree: ";
+                    postOrder(root);
+                    break;
+                case 4:
+                    cout<<"\n Level order traversal of the tree: ";
+                    levelOrder(root);
+                    break;
+                case 5:
+                    cout<<"\n Enter the keyword: ";
+                    cin>>a;
+                    count=search2(root,a);
+                    if(count==-1)
+                        cout<<"\n The element is not found! ";
+                    else
+                        cout<<"\nThe element in level "<<count;
+                    break;
+                case 6:
+                    min=minValueNode(root);
+                    cout<<"\n Minimum elment in the tree: "<<min->key;
+                    break;
+                case 7:
+                    max=maxValueNode(root);
+                    cout<<"\n Maximum elment in the tree: "<<max->key;
+                    break;
+                case 8:
+                    cout << "\nEnter the keyword  : ";
+                    cin >> a;
+                    temp = search(root,a);
+                    if(temp != NULL)
+                    {
+                        temp2 = successor(root,temp);
+                        cout<<"\nSuccessor of the element: "<< temp2->key;
+                    }
+                    else
+                        cout<<"\nThe element is not found! ";
+                    break;
+                case 9:
+                    cout << "\nEnter the keyword  : ";
+                    cin >> a;
+                    temp = search(root,a);
+                    if(temp != NULL)
+                    {
+                        temp2 = predecessor(root,temp);
+                        cout<<"\nPredecessor of the element: "<< temp2->key;
+                    }
+                    else
+                        cout<<"\nThe element is not found! ";
+                    break;
+            }
+            break;
+        default:
+            cout<<"\n Enter a valid choice: ";
+            break;
+    }
+    menu(root);
+}
+
+int main()
+{
+    node *root = NULL,*max,*min,*temp,*temp2;
+    int ch,n,a,d,count;
+    cout<<"\n MENU: \n\t1.Insert\n\t2.Delete\n\t3.Display\n\t4.Exit\n Your choice: ";
+    cin>>ch;
+    switch(ch)
+    {
+        case 1:
+            cout<<"\n Enter the number of nodes to be inserted: ";
+            cin>>n;
+            for(int i=0;i<n;i++)
+            {
+                cout<<"\n Enter the element "<<i+1<<" : ";
+                cin>>a;
+                root=insert(root,a);
+            }
+            break;
+        case 2:
+            cout<<"\n Enter the element to be deleted: ";
+            cin>>a;
+            root = delete_key(root, a);
+            break;
+        case 3:
+            system("CLS");
+            cout<<"\n Display menu:\n\t1.Pre order traversal\n\t2.In order traversal\n\t3.Post order traversal\n\t4.Level order traversal";
+            cout<<"\n\t5.Level of an element\n\t6.Minimum element\n\t7.Maximum element\n\t8.Successor of an element";
+            cout<<"\n\t9.Predecessor of an element\nYour choice: ";
+            cin>>d;
+            switch(d)
+            {
+                case 1:
+                    cout<<"\n Pre order traversal of the tree: ";
+                    preOrder(root);
+                    break;
+                case 2:
+                    cout<<"\n In order traversal of the tree: ";
+                    inOrder(root);
+                    break;
+                case 3:
+                    cout<<"\n Post order traversal of the tree: ";
+                    postOrder(root);
+                    break;
+                case 4:
+                    cout<<"\n Level order traversal of the tree: ";
+                    levelOrder(root);
+                    break;
+                case 5:
+                    cout<<"\n Enter the keyword: ";
+                    cin>>a;
+                    count=search2(root,a);
+                    if(count==-1)
+                        cout<<"\n The element is not found! ";
+                    else
+                        cout<<"\nThe element in level "<<count;
+                    break;
+                case 6:
+                    min=minValueNode(root);
+                    cout<<"\n Minimum elment in the tree: "<<min->key;
+                    break;
+                case 7:
+                    max=maxValueNode(root);
+                    cout<<"\n Maximum elment in the tree: "<<max->key;
+                    break;
+                case 8:
+                    cout << "\nEnter the keyword  : ";
+                    cin >> a;
+                    temp = search(root,a);
+                    if(temp != NULL)
+                    {
+                        temp2 = successor(root,temp);
+                        cout<<"\nSuccessor of the element: "<< temp2->key;
+                    }
+                    else
+                        cout<<"\nThe element is not found! ";
+                    break;
+                case 9:
+                    cout << "\nEnter the keyword  : ";
+                    cin >> a;
+                    temp = search(root,a);
+                    if(temp != NULL)
+                    {
+                        temp2 = predecessor(root,temp);
+                        cout<<"\nPredecessor of the element: "<< temp2->key;
+                    }
+                    else
+                        cout<<"\nThe element is not found! ";
+                    break;
+            }
+            break;
+        case 4:
+            exit(0);
+        default:
+            cout<<"\n Enter a valid choice: ";
+            menu(root);
+    }
+
+    menu(root);
+    return 0;
+}
