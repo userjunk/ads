@@ -1,17 +1,13 @@
 #include <bits/stdc++.h>
 using namespace std;
-
 template <typename T>
-struct Node
-{
+struct Node{
         T data;
         Node<T> *left;
         Node<T> *right;
 };
-
 template<typename T>
-class Bst
-{
+class Bst{
         Node<T> *root;
         public:
         Node<T> *getNode(T elt);
@@ -21,46 +17,36 @@ class Bst
         bool deletion(T elt);
         bool search(T elt);
         void inorder(Node<T> *N);
-        Bst()
-        {
+        Bst(){
                 root = NULL;
         }
 };
-
 template <typename T>
-Node<T>* Bst<T>::getNode(T elt)
-{
+Node<T>* Bst<T>::getNode(T elt){
         Node<T> *N = new Node<T>;
         N->data = elt;
         N->left = NULL;
         N->right = NULL;
         return N;
 }
-
 template <typename T>
-Node<T>* Bst<T> :: getRoot()
-{
+Node<T>* Bst<T> :: getRoot(){
         return root;
 }
-
 template<typename T>
-bool Bst<T>:: insert(T elt)
-{
+bool Bst<T>:: insert(T elt){
         Node<T> *ptr;
         Node<T> *prev;
         Node<T> *N = getNode(elt);
         ptr = root;
-        if(root == NULL)
-        {
+        if(root == NULL){
                 root = N;
                 root->left = NULL;
                 root->right = NULL;
                 return true;
         }
-        else
-        {
-                while(ptr !=NULL )
-                {
+        else{
+                while(ptr !=NULL ){
                         prev = ptr;
                         if(ptr->data < elt)
                                 ptr = ptr->right;
@@ -74,23 +60,17 @@ bool Bst<T>:: insert(T elt)
                 return true;
         }
 }
-
 template<typename T>
-bool Bst<T>:: insert(T *elts, int n)
-{
+bool Bst<T>:: insert(T *elts, int n){
         for(int i=0; i<n; i++)
                 insert(elts[i]);
         return true;
 }
-
 template<typename T>
-bool  Bst<T>::search(T elt)
-{
+bool  Bst<T>::search(T elt){
         Node<T> *ptr = root;
-        while(ptr != NULL)
-        {
-                if(ptr->data == elt)
-                {
+        while(ptr != NULL){
+                if(ptr->data == elt){
                         cout<<"Found";
                         return true;
                 }
@@ -102,35 +82,28 @@ bool  Bst<T>::search(T elt)
         cout<<"Not found";
         return false;
 }
-
 template<typename T>
-void  Bst<T>::inorder( Node<T> *N)
-{
+void  Bst<T>::inorder( Node<T> *N){
         Node<T> *ptr = N;
         if(ptr == NULL)
                 return;
-        else
-        {
+        else{
                 inorder(ptr->left);
                 cout<< ptr->data<<" ";
                 inorder(ptr->right);
         }
 }
-
 template<typename T>
-bool  Bst<T>::deletion(T elt)
-{
+bool  Bst<T>::deletion(T elt){
         Node<T> *prev; Node<T> *ptr = root;
-        while(ptr->data != elt)
-        {
+        while(ptr->data != elt){
                 prev = ptr;
                 if(ptr->data < elt)
                         ptr = ptr->right;
                 else
                         ptr = ptr->left;
         }
-        if(ptr->left == NULL && ptr->right ==NULL)
-        {
+        if(ptr->left == NULL && ptr->right ==NULL){
                 if(ptr == prev->left)
                         prev->left = NULL;
                 else
@@ -138,43 +111,34 @@ bool  Bst<T>::deletion(T elt)
                 delete(ptr);
                 return true;
         }
-
-        else if(ptr->left == NULL)
-        {
-                if( ptr == prev->right)
-                {
+        else if(ptr->left == NULL){
+                if( ptr == prev->right){
                         prev->right = ptr->right;
                         ptr->right = NULL;
                 }
-                else
-                {
+                else{
                         prev->left = ptr->right;
                         ptr->right = NULL;
                 }
                 delete(ptr);
                 return true;
         }
-        else if(ptr->right == NULL)
-        {
-                if( ptr == prev->right)
-                {
+        else if(ptr->right == NULL){
+                if( ptr == prev->right){
                         prev->right = ptr->left;
                         ptr->left = NULL;
                 }
-                else
-                {
+                else{
                         prev->left = ptr->left;
                         ptr->left = NULL;
                 }
                 delete(ptr);
                 return true;
         }
-        else
-        {
+        else{
                 Node<T> *rep = (ptr->right)->left;
                 Node<T> *temp;
-                while(rep->left != NULL)
-                {
+                while(rep->left != NULL){
                         temp = rep;
                         rep = rep->left;
                 }
@@ -191,23 +155,18 @@ bool  Bst<T>::deletion(T elt)
                 return true;
         }
 }
-
-void readfile(int *a,int j)
-{
+void readfile(int *a,int j){
         int i=0;
         fstream fin;
         fin.open("inputbstelt.txt",ios::in);
-        while(!fin.eof())
-        {
+        while(!fin.eof()){
                 fin>>a[i];
                 i++;
         }
         cout<<endl;
         fin.close();
 }
-
-int main()
-{
+int main(){
         Bst<int> tree;
         int j;
         cout<<"\n Enter the number of elements: ";
@@ -222,7 +181,6 @@ int main()
                 fout<<nums[i]<<endl;
         fout.close();;
         int elts[j];readfile(elts,j);
-
         tree.insert(elts,j);
         Node<int> *r;
         r = tree.getRoot();
