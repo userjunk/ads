@@ -17,12 +17,10 @@ void swaps(int xp, int yp){
 }
 int insertion(int b[],int n){
         int i, key, j;
-        for (i = 1; i < n; i++)
-    {
+        for (i = 1; i < n; i++){
                 key = b[i];
                 j = i - 1;
-                while (j >= 0 && b[j] > key)
-                {
+                while (j >= 0 && b[j] > key){
                         b[j + 1] = b[j];
                         j = j - 1;
                 }
@@ -30,14 +28,10 @@ int insertion(int b[],int n){
         }
         cout<<" The time taken for insertion sort is ";
 }
-
-void selection(int arr[],int n)
-{
-        for(int i=0;i<n-1;i++)
-        {
+void selection(int arr[],int n){
+        for(int i=0;i<n-1;i++){
                 int min_indx=i;
-                for(int j=i+1;j<n;j++)
-                {
+                for(int j=i+1;j<n;j++){
                         if(arr[j]<arr[min_indx])
                                 min_indx=j;
                 }
@@ -45,9 +39,7 @@ void selection(int arr[],int n)
         }
         cout<<" The time taken for selection sort is ";
 }
-
-void merge(int arr[], int l, int m, int r)
-{
+void merge(int arr[], int l, int m, int r){
         int i, j, k;
         int n1 = m - l + 1;
         int n2 =  r - m;
@@ -59,82 +51,63 @@ void merge(int arr[], int l, int m, int r)
         i = 0;
         j = 0;
         k = l;
-        while (i < n1 && j < n2)
-        {
-                if (L[i] <= R[j])
-                {
+        while (i < n1 && j < n2){
+                if (L[i] <= R[j]){
                         arr[k] = L[i];
                         i++;
                 }
-                else
-                {
+                else{
                         arr[k] = R[j];
                         j++;
                 }
                 k++;
         }
-        while (i < n1)
-        {
+        while (i < n1){
                 arr[k] = L[i];
                 i++;
                 k++;
         }
-        while (j < n2)
-        {
+        while (j < n2){
                 arr[k] = R[j];
                 j++;
                 k++;
         }
 }
-
-void mergeSort(int arr[], int l, int r)
-{
-        if (l < r)
-        {
+void mergeSort(int arr[], int l, int r){
+        if (l < r){
                 int m = l+(r-l)/2;
                 mergeSort(arr, l, m);
                 mergeSort(arr, m+1, r);
                 merge(arr, l, m, r);
         }
 }
-
-void heapify(int arr[], int n, int i)
-{
+void heapify(int arr[], int n, int i){
         int largest = i;
         int l = 2*i + 1;
         int r = 2*i + 2;
         if (l < n && arr[l] > arr[largest])
                 largest = l;
-
         if (r < n && arr[r] > arr[largest])
                 largest = r;
-        if (largest != i)
-        {
+        if (largest != i){
                 swaps(arr[i], arr[largest]);
                 heapify(arr, n, largest);
         }
 }
-
-void heap(int arr[], int n)
-{
+void heap(int arr[], int n){
         for (int i = n / 2 - 1; i >= 0; i--)
                 heapify(arr, n, i);
-        for (int i=n-1; i>=0; i--)
-        {
+        for (int i=n-1; i>=0; i--){
                 swaps(arr[0], arr[i]);
                 heapify(arr, i, 0);
         }
         cout<<" The time taken for heap sort is ";
 }
-
-int partition (int arr[], int low, int high)
-{
+int partition (int arr[], int low, int high){
         int pivot = arr[high];
         int i = (low - 1);
-        for (int j = low; j <= high - 1; j++)
-        {
-                if (arr[j] <= pivot)
-                {
+        for (int j = low; j <= high - 1; j++){
+                if (arr[j] <= pivot){
                         i++;
                         swap(&arr[i], &arr[j]);
                 }
@@ -142,19 +115,14 @@ int partition (int arr[], int low, int high)
         swap(&arr[i + 1], &arr[high]);
         return (i + 1);
 }
-
-void quick(int arr[], int low, int high)
-{
-        if (low < high)
-        {
+void quick(int arr[], int low, int high){
+        if (low < high){
                 int pi = partition(arr, low, high);
                 quick(arr, low, pi - 1);
                 quick(arr, pi + 1, high);
         }
 }
-
-int output(clock_t t,int b[],int n)
-{
+int output(clock_t t,int b[],int n){
         t = clock() - t;
         double time_taken;
         time_taken = ((double)t)/CLOCKS_PER_SEC;
@@ -162,7 +130,6 @@ int output(clock_t t,int b[],int n)
         cout<<" seconds";
         fstream fout;
         fout.open("output.txt",ios::out);
-
         for(int i=0; i<n; i++)
                 fout<<b[i]<<endl;
         fout<<"\n The time taken is "<<(float)time_taken<<" (micro seconds)";
@@ -170,32 +137,25 @@ int output(clock_t t,int b[],int n)
         cout<<"\n The random input numbers are read from input.txt & stored sorted in output.txt\n";
         return 0;
 }
-
-void readfile(int *a,int j)
-{
+void readfile(int *a,int j){
         int i=0;
         fstream fin;
         fin.open("input.txt",ios::in);
-        while(!fin.eof())
-        {
+        while(!fin.eof()){
                 fin>>a[i];
                 i++;
         }
         cout<<endl;
         fin.close();
 }
-
-int sort(int j)
-{
+int sort(int j){
         int ch;
         clock_t t;
         cout<<"\n Enter the sort to be done: \n\t1.Insertion sort\n\t2.Selection sort\n\t3.Merge sort\n\t4.Heap sort";
         cout<<"\n\t5.Iterative quick sort\n\t6.Back\n\t7.Exit\n \nYour choice: ";
         cin>>ch;
         int b[j];readfile(b,j);
-
-        switch(ch)
-        {
+        switch(ch){
                 case 1: t=clock();
                         insertion(b,j);
                         output(t,b,j);
@@ -228,20 +188,15 @@ int sort(int j)
         }
         return 0;
 }
-
-int back()
-{
+int main(){
         int j;
         cout<<"\n Enter the number of elements: ";
         cin>>j;
-
         fstream fout;
         fout.open("input.txt",ios::out);
-
         int nums;
         srand(time(0));
-        for(int i=0; i<j-1; i++)
-        {
+        for(int i=0; i<j-1; i++){
                 nums= rand()%800+200;
                 fout<<nums<<endl;
         }
@@ -249,11 +204,5 @@ int back()
         fout<<nums;
         fout.close();
         sort(j);
-        return 0;
-}
-
-int main()
-{
-        back();
         return 0;
 }
