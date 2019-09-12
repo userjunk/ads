@@ -1,32 +1,24 @@
 #include <bits/stdc++.h>
-
 using namespace std;
-
 int back();
 int sort(int);
 int *readfile(int);
 int insertion(int b[],int n);
 int output(clock_t t,int b[],int n);
-
-void swap(int *xp, int *yp)
-{
+void swap(int *xp, int *yp){
     int temp = *xp;
     *xp = *yp;
     *yp = temp;
 }
-
-void swaps(int xp, int yp)
-{
+void swaps(int xp, int yp){
         int temp = xp;
         xp = yp;
         yp = temp;
 }
-
-int insertion(int b[],int n)
-{
+int insertion(int b[],int n){
         int i, key, j;
         for (i = 1; i < n; i++)
-        {
+    {
                 key = b[i];
                 j = i - 1;
                 while (j >= 0 && b[j] > key)
