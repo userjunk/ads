@@ -1,5 +1,10 @@
 avl
 bst
+bfs
 btree
+dfs
+dijkstras
 sorting
 splay
+unweightedgraph
+weightedgraph
