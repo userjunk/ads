@@ -1,0 +1,87 @@
+
+#include<iostream>
+#include<queue>
+using namespace std;
+struct node
+{
+    int value;
+    node *next;
+};
+class graph
+{
+    node **head;
+    int n;
+    public:
+    graph(int a)
+    {
+        head =new node*[a]();
+        for(int i=0;i<a;i++)
+            head[i]=NULL;
+        n=a;
+    }
+    void addedges(int src,int dest)
+    {
+        node *n=new node;
+        n->value=dest;
+        n->next=head[src];
+        head[src]=n;
+    }
+    void dfsprint(int v,bool *visited)
+    {
+        visited[v]=true;
+        cout<<' '<<v<<"->";
+        node *ptr=head[v];
+        while(ptr!=NULL)
+        {
+            int k=ptr->value;
+            if(!visited[k])
+                dfsprint(k,visited);
+            ptr=ptr->next;
+        }
+    }
+    void dfs(int v)
+    {
+        bool *visited = new bool[n];
+        for(int i=0;i<n;i++)
+            visited[i]=false;
+        dfsprint(v,visited);
+    }
+    void bfs(int v)
+    {
+        bool *visited = new bool[n];
+        for(int i=0;i<n;i++)
+            visited[i]=false;
+        visited[v]=true;
+        queue<int> q;
+        q.push(v);
+        while(!q.empty())
+        {
+            int k=q.front();
+            cout<<' ' <<k<<"->";
+            q.pop();
+            node *ptr=head[k];
+            while(ptr!=NULL)
+            {
+                if(!visited[ptr->value])
+                {
+                    visited[ptr->value]=true;
+                    q.push(ptr->value);
+                }
+                ptr=ptr->next;
+            }
+        }
+    }
+};
+int main()
+{
+    graph g(4);
+    g.addedges(0, 1);
+    g.addedges(0, 2);
+    g.addedges(1, 2);
+    g.addedges(2, 0);
+    g.addedges(2, 3);
+    g.addedges(3, 3);
+    g.dfs(2);
+    cout<<"\n";
+    g.bfs(1);
+}
