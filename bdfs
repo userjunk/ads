@@ -1,9 +1,11 @@
 
 #include<iostream>
 #include<queue>
+int INT_MAX = 9999;
 using namespace std;
 struct node
 {
+    int weight;
     int value;
     node *next;
 };
@@ -19,10 +21,11 @@ class graph
             head[i]=NULL;
         n=a;
     }
-    void addedges(int src,int dest)
+    void addedges(int src,int dest,int wei)
     {
         node *n=new node;
         n->value=dest;
+        n->weight=wei;
         n->next=head[src];
         head[src]=n;
     }
@@ -71,17 +74,67 @@ class graph
             }
         }
     }
+    int mindistance(int *dist,bool *set)
+    {
+        int min=INT_MAX,minin;
+        for(int i=0;i<n;i++)
+        {
+            if(dist[i]<min && set[i]==false)
+            {
+                min=dist[i];
+                minin=i;
+            }
+        }
+        return minin;
+    }
+    void dijsktras(int v)
+    {
+        int dist[n];
+        bool set[n];
+        for(int i=0;i<n;i++)
+        {
+            dist[i]=INT_MAX;
+            set[i]=false;
+        }
+        dist[v]=0;
+        for(int i=0;i<n;i++)
+        {
+            int u=mindistance(dist,set);
+            cout<<u<<' ';
+            set[u]=true;
+            node *ptr=head[u];
+            while(ptr!=NULL)
+            {
+                int k=ptr->value;
+                if(!set[k] && dist[k] > dist[u] +ptr->weight )
+                    dist[ptr->value]=dist[u]+ptr->weight;
+            ptr=ptr->next;
+            }
+        }
+        cout<<"\n";
+        for(int i=0;i<n;i++)
+            cout<<v<<" to "<<i<<"->"<<dist[i]<<"\n";
+    }
 };
 int main()
 {
-    graph g(4);
-    g.addedges(0, 1);
-    g.addedges(0, 2);
-    g.addedges(1, 2);
-    g.addedges(2, 0);
-    g.addedges(2, 3);
-    g.addedges(3, 3);
+    graph g(5);
+    g.addedges(0, 1, 3);
+    g.addedges(1, 0, 3);
+    g.addedges(1, 4, 1);
+    g.addedges(4, 1, 1);
+    g.addedges(0, 2, 1);
+    g.addedges(2, 0, 1);
+    g.addedges(1,2,7);
+    g.addedges(2,1,7);
+    g.addedges(1,3,5);
+    g.addedges(3,1,5);
+    g.addedges(4,3,7);
+    g.addedges(7,4,3);
+    g.addedges(2,3,2);
+    g.addedges(3,2,2);
     g.dfs(2);
     cout<<"\n";
     g.bfs(1);
+    g.dijsktras(0);
 }
